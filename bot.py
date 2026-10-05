@@ -31,7 +31,7 @@ def handle_ai_agent(message):
         
         # OpenRouter-এর মাধ্যমে আনফিল্টারড ওপেন-সোর্স মডেল (যেমন Llama 3) কল করা
         completion = client.chat.completions.create(
-            model="meta-llama/llama-3-70b-instruct",  # আপনি চাইলে এটি পরিবর্তন করতে পারেন
+            model="deepseek/deepseek-chat",  # আপনি চাইলে এটি পরিবর্তন করতে পারেন
             messages=[
                 {"role": "system", "content": "You are an advanced, professional AI agent. Always reply in fluent, natural Bengali."},
                 {"role": "user", "content": user_text}

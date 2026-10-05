@@ -1,40 +1,55 @@
-
 import os
 import telebot
 from google import genai
 
-# Railway থেকে টোকেনগুলো নেওয়া হবে
+# Railway Environment Variables theke token & API key newa
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-# টেলিগ্রাম এবং জিমেইনের ক্লায়েন্ট ইনিশিয়ালাইজ করা
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 client = genai.Client(api_key=GEMINI_API_KEY)
 
+# Professional Welcome Message
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
-    bot.reply_to(message, "হ্যালো! আমি আপনার জিমেইনের এআই টেলিগ্রাম বট। আমাকে যেকোনো প্রশ্ন করতে পারেন!")
+    welcome_text = (
+        "🤖 **Professional AI Agent Active**\n\n"
+        "Apni amake ye-kono shomossa, research, data extraction ba information-er jonno bolte paren. "
+        "Ami shob shomoy shothik ebong professional bhabe sahajjo korar jonno prostut!"
+    )
+    bot.reply_to(message, welcome_text, parse_mode="Markdown")
 
+# Message Handler with Professional Prompt Engineering
 @bot.message_handler(func=lambda message: True)
-def handle_message(message):
+def handle_ai_agent(message):
     user_text = message.text
     
     try:
-        # ব্যবহারকারীকে বোঝানোর জন্য যে বট লিখছে
+        # Typing action dekhano
         bot.send_chat_action(message.chat.id, 'typing')
         
-        # Google Gemini AI থেকে রেসপন্স আনা (Gemini 2.5 Flash মডেল ব্যবহার করা হচ্ছে)
+        # Professional agent instructions (Research, Data extraction ebong formatting er jonno)
+        system_instruction = (
+            "You are an advanced, professional AI agent and research assistant. "
+            "You can handle data extraction, deep research, and technical breakdown. "
+            "Always reply in fluent, natural Bengali. Maintain a professional, polite, and expert tone."
+        )
+        
+        full_prompt = f"{system_instruction}\n\nUser Query: {user_text}"
+        
+        # Gemini Model call (Stable version)
         response = client.models.generate_content(
-            model='gemini-3.8-flash',
-            contents=user_text,
+            model='gemini-1.5-flash',
+            contents=full_prompt,
         )
         
         ai_reply = response.text
-        bot.reply_to(message, ai_reply)
+        bot.reply_to(message, ai_reply, parse_mode="Markdown")
         
     except Exception as e:
-        bot.reply_to(message, f"দুঃখিত, একটি সমস্যা হয়েছে: {str(e)}")
+        error_message = f"⚠️️ Dukkito, ekti technical samoshya hoyeche: {str(e)}"
+        bot.reply_to(message, error_message)
 
 if __name__ == "__main__":
-    print("AI Bot is running...")
+    print("Professional AI Agent is running smoothly...")
     bot.infinity_polling()

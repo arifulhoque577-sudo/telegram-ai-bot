@@ -25,7 +25,7 @@ def handle_message(message):
         
         # Google Gemini AI থেকে রেসপন্স আনা (Gemini 2.5 Flash মডেল ব্যবহার করা হচ্ছে)
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model='gemini-3.8-flash',
             contents=user_text,
         )
         
